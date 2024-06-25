@@ -1,95 +1,81 @@
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import Image from "next/image";
-import styles from "./page.module.css";
+import Link from "next/link";
 
-export default function Home() {
+// import Link from "next/link";
+// import { ArrowRightIcon } from "@heroicons/react/24/solid";
+
+export const metadata = {
+  title: "Home | Vet Management",
+  description: "Vet Management Home Page",
+};
+
+export default function HomePage() {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    <Box
+      sx={{
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundImage: "url('/assets/images/backgroundhome.webp')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundColor: "#f0f0f0",
+        overflow: "hidden",
+      }}
+    >
+      <Container maxWidth="lg" sx={{ padding: { xs: 2, md: 4 } }}>
+        <Grid container spacing={4} alignItems="center">
+          <Grid item xs={12} md={6}>
+            <Box sx={{ textAlign: { xs: "center", md: "left" } }}>
+              <Typography variant="h2" color="primary" gutterBottom>
+                Welcome to Vet Management System
+              </Typography>
+              <Typography variant="h5" color="textSecondary" paragraph>
+                Manage your pets and veterinary services with ease.
+              </Typography>
+              <Typography variant="body1" color="textSecondary" paragraph>
+                Our system provides all the tools you need to keep track of your
+                pets' health records, appointments, and treatments. Join us
+                today and experience a seamless way to manage your veterinary
+                services.
+              </Typography>
+              <Box
+                sx={{
+                  mt: 4,
+                  display: "flex",
+                  flexDirection: { xs: "column", sm: "row" },
+                  justifyContent: { xs: "center", md: "flex-start" },
+                  gap: 2,
+                }}
+              >
+                <Button
+                  component={Link}
+                  href="/register"
+                  variant="contained"
+                  color="primary"
+                  sx={{ width: { xs: "100%", sm: "auto" } }}
+                >
+                  Register
+                </Button>
+                <Button
+                  component={Link}
+                  href="/login"
+                  variant="outlined"
+                  color="primary"
+                  sx={{ width: { xs: "100%", sm: "auto" } }}
+                >
+                  Login
+                </Button>
+              </Box>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            {/* Optional: You can include an image here if needed */}
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
   );
 }

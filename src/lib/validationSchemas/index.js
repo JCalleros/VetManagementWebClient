@@ -1,0 +1,1 @@
+export { registerUserSchema } from "./RegisterSchema";
