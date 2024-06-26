@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  client:
+    build:
+      context: .
+      dockerfile: ./docker/local/Dockerfile
+    
+    image: vet_client
+    container_name: vet_client
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - vet_static_volume:/app/staticfiles
+    networks:
+      - vet_prod_nw
+
+  nginx:
+    build:
+      context: ./docker/local/nginx
+      dockerfile: Dockerfile
+    restart: always
+    container_name: vet_nginx
+    ports: 
+      - "8080:80"
+    volumes:
+      - vet_static_volume:/app/staticfiles
+      - logs_store:/var/log/nginx
+    depends_on:
+      - client 
+    networks:
+      - vet_prod_nw   
+
+
+volumes:
+  vet_static_volume:
+    external: true
+  logs_store: {}
+  
+networks:
+  vet_prod_nw:
+    external: true

@@ -37,8 +37,8 @@ export default function HomePage() {
               </Typography>
               <Typography variant="body1" color="textSecondary" paragraph>
                 Our system provides all the tools you need to keep track of your
-                pets' health records, appointments, and treatments. Join us
-                today and experience a seamless way to manage your veterinary
+                pets health records, appointments, and treatments. Join us today
+                and experience a seamless way to manage your veterinary
                 services.
               </Typography>
               <Box
