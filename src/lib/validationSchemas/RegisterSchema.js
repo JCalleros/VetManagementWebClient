@@ -4,20 +4,11 @@ const usernameRegex = /^[a-zA-Z0-9_@+.-]+$/;
 
 export const registerUserSchema = z
   .object({
-    username: z.string().regex(usernameRegex, {
-      message:
-        "Usernames can only contain letters(uppercase and lowercase), digits, _, @, +, ., and -",
-    }),
-    first_name: z
+    name: z
       .string()
       .trim()
-      .min(2, { message: "First name must be at least 2 characters long" })
-      .max(50, { message: "First name must be less than 50 characters long" }),
-    last_name: z
-      .string()
-      .trim()
-      .min(2, { message: "Last name must be at least 2 characters long" })
-      .max(50, { message: "Last name must be less than 50 characters long" }),
+      .min(2, { message: "Name must be at least 2 characters long" })
+      .max(50, { message: "Name must be less than 120 characters long" }),
     email: z.string().trim().email({ message: "Enter a valid email address" }),
     password: z
       .string()

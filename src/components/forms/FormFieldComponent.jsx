@@ -10,8 +10,6 @@ export function FormFieldComponent({
   type="text",
   placeholder,
   required=false,
-  startIcon,
-  endIcon,
   link,
   isPassword=false,
   isTextArea=false,
@@ -40,8 +38,6 @@ export function FormFieldComponent({
           label={label}
           type='password'
           placeholder={placeholder}
-          startIcon={startIcon}
-          endIcon={endIcon}
           disabled={disabled}
         />
       )
@@ -53,8 +49,6 @@ export function FormFieldComponent({
           label={label}
           type={type}
           placeholder={placeholder}
-          startIcon={startIcon}
-          endIcon={endIcon}
           disabled={disabled}
         />
       )

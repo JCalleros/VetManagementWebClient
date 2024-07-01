@@ -28,7 +28,7 @@ services:
       - vet_static_volume:/app/staticfiles
       - logs_store:/var/log/nginx
     depends_on:
-      - client 
+      - client
     networks:
       - vet_prod_nw   
 
