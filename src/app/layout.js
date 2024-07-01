@@ -2,7 +2,6 @@ import { openSans, robotoSlab } from "@/lib/fonts";
 import ReduxProvider from "@/lib/redux/provider";
 import Toast from "@/components/shared/Toast";
 import { PersistAuth } from "@/utils";
-import { Box } from "@mui/material";
 
 export const metadata = {
   title: "Home | Alpha Apartments",

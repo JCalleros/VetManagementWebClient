@@ -1,6 +1,7 @@
 FROM docker.io/node:20.11-alpine3.18 as base
 
-FROM base as node-build-stage
+ARG APP_HOME=/app
+WORKDIR ${APP_HOME}
 
 RUN apk add --no-cache libc6-compat
 
@@ -13,19 +14,13 @@ RUN \
     else echo "Lock file not found." && exit 1; \
     fi
 
-FROM base as node-run-stage
-
-ARG APP_HOME=/app
-WORKDIR ${APP_HOME}
-
-COPY --from=node-build-stage /node_modules ./node_modules
-
-COPY . ${APP_HOME}
+COPY . .
+RUN rm -rf .next
+RUN npm run build
 
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S reactjs -u 1001 -G nodejs
 
-RUN npm run build
 
 RUN chown -R reactjs:nodejs ${APP_HOME}
 

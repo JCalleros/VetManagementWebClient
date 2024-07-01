@@ -1,38 +1,37 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Contact2Icon, MailIcon, UserCheck2 } from "lucide-react"
-import { useRegisterUserMutation } from "@/lib/redux/features/auth/authApiSlice"
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { registerUserSchema } from "@/lib/validationSchemas";
 import { extractErrorMessage } from "@/utils";
 import { toast } from "react-toastify";
 import { FormFieldComponent } from "@/components/forms/FormFieldComponent";
 import { Box, Button, Typography } from "@mui/material";
+import { useLoginUserMutation } from "@/lib/redux/features/auth/authApiSlice";
+import { useAppDispatch } from "@/lib/redux/hooks/typedHooks";
+import { setAuth } from "@/lib/redux/features/auth/authSlice";
+import { loginUserSchema } from "@/lib/validationSchemas/LoginSchema";
 
 export default function RegisterForm() {
-  const [registerUser, {isLoading}] = useRegisterUserMutation();
+  const [loginUser, {isLoading}] = useLoginUserMutation();
   const router = useRouter();
-
+  const dispatch = useAppDispatch();
   const {register, handleSubmit, reset, formState: {errors},} = useForm({
-    resolver: zodResolver(registerUserSchema),
+    resolver: zodResolver(loginUserSchema),
     mode: "all",
     defaultValues: {
-      name: "",
       email: "",
       password: "",
-      re_password: ""
     }
   })
-  
+
+
   const onSubmit = async(values)=>{
     try {
-      await registerUser(values).unwrap();
-      toast.success(
-        "An Email with an activation link has been sent to your email address. Please check your email and activate your account."
-      )
-      router.push("/login");
-      reset();
+      await loginUser(values).unwrap();
+      dispatch(setAuth())
+      toast.success("Login Successful")
+      router.push("/pets")
+      reset()
     }catch(e){
       const errorMessage = extractErrorMessage(e)
       toast.error(errorMessage || "An error occurred")
@@ -61,13 +60,6 @@ export default function RegisterForm() {
       
     }}>
       <FormFieldComponent
-        label="Name"
-        name="name"
-        register={register}
-        errors={errors}
-        placeholder="John Malillon..."
-      />
-      <FormFieldComponent
         label="Email Address"
         name="email"
         type="email"
@@ -83,15 +75,7 @@ export default function RegisterForm() {
         errors={errors}
         placeholder="Enter your password"
         isPassword={true}
-      />
-      <FormFieldComponent
-        label="Confirm Password"
-        name="re_password"
-        type="password"
-        register={register}
-        errors={errors}
-        placeholder="Enter your password"
-        isPassword={true}
+        link={{linkText: "Forgot Password?", linkUrl: "/forgot-password" }}
       />
     </Box>
     <Button
