@@ -8,11 +8,13 @@ services:
     
     image: vet_client
     container_name: vet_client
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     volumes:
       - .:/app
-      - vet_static_volume:/app/staticfiles
+      - /app/node_modules
+    environment:
+      - WATCHPACK_POLLING=true
     networks:
       - vet_prod_nw
 
