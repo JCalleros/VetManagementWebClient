@@ -45,7 +45,7 @@ const PatientCardContent = ({patient}) => {
           <Typography variant="body2" color="text.secondary">
             {patient.species}
           </Typography>
-          {patient.sex === 'M' ? <MaleIcon color="primary" /> : <FemaleIcon color="secondary" />}
+          {patient.gender === 'male' ? <MaleIcon color="primary" /> : <FemaleIcon color="secondary" />}
         </Box>
       </Box>
       <Typography variant="body2" color="text.secondary">
@@ -58,9 +58,11 @@ const PatientCardContent = ({patient}) => {
       </Typography>
       
       <Typography variant="body2" color="text.secondary">
-        {patient.owners && patient.owners.length > 0
-          ? `Owners: ${patient.owners.map(owner => owner.name).join(', ')}`
-          : 'Owners: No Owner'}
+        Owner Name: {patient.owner_name}
+      </Typography>
+      
+      <Typography variant="body2" color="text.secondary">
+        Owner Phone: {patient.owner_phone_number}
       </Typography>
     </CardContent>
   )

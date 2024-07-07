@@ -1,15 +1,13 @@
 "use client";
-
-import { setSearchTerm } from "@/lib/redux/features/users/userSlice";
+import { setSearchTerm } from "@/lib/redux/features/patients/patientSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks/typedHooks";
 import { Box, TextField } from "@mui/material";
-import Image from "next/image";
 import React from "react";
 import { Search } from "lucide-react";
 
-const UsersSearch = () => {
+const PatientSearch = () => {
   const dispatch = useAppDispatch();
-  const searchTerm = useAppSelector((state) => state.user.searchTerm);  
+  const searchTerm = useAppSelector((state) => state.patient.searchTerm);  
   const handleInputChange = (event) => {
     dispatch(setSearchTerm(event.target.value));
   };
@@ -40,4 +38,4 @@ const UsersSearch = () => {
   );
 };
 
-export default UsersSearch;
+export default PatientSearch;

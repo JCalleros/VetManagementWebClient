@@ -5,7 +5,8 @@ import PaginationSection from "@/components/shared/PaginationSection";
 import { useAppSelector } from '@/lib/redux/hooks/typedHooks';
 import PatientCard from '@/components/cards/PatientCard';
 import { useGetAllPatientsQuery } from '@/lib/redux/features/patients/patientsApiSlice';
-import UsersSearch from '@/components/shared/search/UsersSearch';
+
+import PatientSearch from '@/components/shared/search/PatientSearch';
 
 const speciesOptions = ['Dog', 'Cat'];
 const sexOptions = ['Male', 'Female'];
@@ -43,7 +44,7 @@ export default function PatientsPage() {
           marginBottom: 2,
         }}
       >
-        <UsersSearch />
+        <PatientSearch />
         <Button variant="contained" color="primary" onClick={()=>{}}>
           Clear
         </Button>
@@ -66,7 +67,9 @@ export default function PatientsPage() {
           )}
         </AnimatePresence>
       </Grid>
-      <PaginationSection totalPages={totalPages} entityType="patient" />
+      <Box sx={{display: 'flex', mt: '2rem', justifyContent: 'center', bgcolor: 'red'}}>
+        <PaginationSection totalPages={totalPages} entityType="patient" />
+      </Box>
     </Box>
   )
 }

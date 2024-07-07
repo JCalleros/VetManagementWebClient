@@ -8,7 +8,6 @@ export const patientApiSlice = baseApiSlice.injectEndpoints({
         if (params.page) {
           queryString.append("page", params.page.toString());
         }
-
         if (params.searchTerm) {
           queryString.append("search", params.searchTerm);
         }
