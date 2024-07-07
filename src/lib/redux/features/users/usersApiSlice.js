@@ -12,7 +12,7 @@ export const userApiSlice = baseApiSlice.injectEndpoints({
         if (params.searchTerm) {
           queryString.append("search", params.searchTerm);
         }
-        return `/profiles/all/${queryString.toString()}`;
+        return `/profiles/all/?${queryString.toString()}`;
       },
       providesTags: ["User"],
     }),
