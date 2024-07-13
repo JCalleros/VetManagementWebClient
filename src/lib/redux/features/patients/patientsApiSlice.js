@@ -15,7 +15,12 @@ export const patientApiSlice = baseApiSlice.injectEndpoints({
       },
       providesTags: ["Patient"],
     }),
+    getSinglePatient: builder.query({
+      query: (patientSlug) => `/patients/${patientSlug}/`,
+      providesTags: ["Patient"],
+    }),
   }),
 });
 
-export const { useGetAllPatientsQuery } = patientApiSlice;
+export const { useGetAllPatientsQuery, useGetSinglePatientQuery } =
+  patientApiSlice;

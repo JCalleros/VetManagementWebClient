@@ -24,11 +24,13 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
           api,
           extraOptions
         );
-
+        console.log(`Refresh Response: ${JSON.stringify(refreshResponse)}`);
         if (refreshResponse?.data) {
+          console.log(`Refresh data found setting auth`);
           api.dispatch(setAuth());
           response = await baseQuery(args, api, extraOptions);
         } else {
+          console.log(`No refresh, loggingout`);
           api.dispatch(setLogout());
         }
       } finally {

@@ -1,28 +1,24 @@
 "use client"
 
 import { leftNavLinks } from '@/constants';
+import useSidebar from '@/context/hooks/useSidebar';
 import { Drawer, Box, IconButton, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Link, Tooltip } from '@mui/material'
 import { ChevronRight, ChevronLeft } from 'lucide-react';
-import { useState } from 'react';
 
+const drawerWidth = "260px"
 export default function LeftNavbar() {
-  const [open, setOpen] = useState(false);
-  
-  const handleDrawerToggle = () => {
-      setOpen(!open);
-  };
-
+  const { isSidebarOpen, toggleSidebar } = useSidebar();
 
   return (
     <>
       <Drawer
         variant="permanent"
-        open={open}
+        open={isSidebarOpen}
         sx={{
-          width: open ? drawerWidth : 60,
+          width: isSidebarOpen ? drawerWidth : 60,
           flexShrink: 0,
           '& .MuiDrawer-paper': {
-            width: open ? drawerWidth : 60,
+            width: isSidebarOpen ? drawerWidth : 60,
             transition: 'width 0.3s',
             overflowX: 'hidden',
             height: '100%',
@@ -33,20 +29,20 @@ export default function LeftNavbar() {
         }}
       >
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '64px', backgroundColor: '#35495e' }}>
-          <IconButton onClick={handleDrawerToggle} sx={{ color: '#fff' }}>
-            {open ? <ChevronLeft /> : <ChevronRight />}
+          <IconButton onClick={toggleSidebar} sx={{ color: '#fff' }}>
+            {isSidebarOpen ? <ChevronLeft /> : <ChevronRight />}
           </IconButton>
         </Box>
         <Divider sx={{ borderColor: '#fff' }} />
         <List>
-          {leftNavLinks.map(({ text, icon, path }, index) => (
-            <Tooltip key={index} title={open ? '' : text} placement="right">
+          {leftNavLinks.map(({ path, label, icon }, index) => (
+            <Tooltip key={index} title={isSidebarOpen ? '' : label} placement="right">
               <ListItem component={Link} to={path} disablePadding>
                 <ListItemButton sx={{ minHeight: 48 }}>
-                  <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', color: '#FFF' }}>
+                  <ListItemIcon sx={{ minWidth: 0, mr: isSidebarOpen ? 3 : 'auto', justifyContent: 'center', color: '#FFF' }}>
                     {icon}
                   </ListItemIcon>
-                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0, color: '#FFF' }} />
+                  <ListItemText primary={label} sx={{ opacity: isSidebarOpen ? 1 : 0, color: '#FFF' }} />
                 </ListItemButton>
               </ListItem>
             </Tooltip>

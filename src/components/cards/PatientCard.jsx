@@ -12,7 +12,6 @@ const speciesImages = {
 };
 
 
-
 const PatientCardActions = () => {
   return (
     <CardActions sx={{ justifyContent: 'flex-end' }}>
@@ -76,7 +75,7 @@ const PatientCard = ({ patient }) => {
       transition={{ duration: 0.3 }}
       style={{ width: '100%', height: '100%' }}
     >
-      <Link href={`/patient/${patient.id}`} key={patient.id}>
+      <Link href={`/patients/${patient.slug}`} key={patient.slug}>
         <Card
           sx={{
             height: '100%',

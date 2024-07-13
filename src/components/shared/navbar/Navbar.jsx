@@ -1,33 +1,51 @@
 "use client"
 
-import { AppBar, Toolbar, Drawer } from '@mui/material'
-import { useState } from 'react';
+import useSidebar from '@/context/hooks/useSidebar';
+import { AppBar, Toolbar, Typography } from '@mui/material';
+
+const drawerWidth = "260px"
+const miniDrawerWidth = "60px";
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
-
-  const handleDrawerToggle = () => {
-    setOpen(!open);
-  };
-
+  const { isSidebarOpen } = useSidebar();
   return (
     <>
       <AppBar
         position="fixed"
         sx={{
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-          width: `calc(100% - ${open ? drawerWidth : 60}px)`,
-          ml: `${open ? drawerWidth : 60}px`,
-          transition: 'width 0.3s, margin-left 0.3s',
+          zIndex: 1,
+          width: { xs: '100%', sm: `calc(100% - ${isSidebarOpen ? drawerWidth : miniDrawerWidth})` },
+          ml: {  xs: '100%', sm: `calc(100% - ${isSidebarOpen ? drawerWidth : miniDrawerWidth})` },
+          height: '65px',
+          transition: 'margin-left 0.3s',
           backgroundColor: '#42b983',
         }}
+    >
+      <Toolbar
+        sx={{
+          pl: { 
+            xs: 2, 
+            sm: `${isSidebarOpen ? drawerWidth : miniDrawerWidth}px` 
+          },
+          transition: 'padding-left 0.3s',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: { xs: 'center', sm: 'flex-start' },
+          width: '100%',
+        }}
       >
-        <Toolbar variant="h6" component="div">
-            Vet Management System
-        </Toolbar>
-      </AppBar>
-      
+        <Typography
+          variant="h6"
+          noWrap
+          sx={{
+            textAlign: { xs: 'center', sm: 'left' },
+            width: '100%',
+          }}
+        >
+          Vet Management System
+        </Typography>
+      </Toolbar>
+    </AppBar>
     </>
-    
   )
 }
