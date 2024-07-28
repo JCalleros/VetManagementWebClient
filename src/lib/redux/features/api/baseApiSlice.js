@@ -24,13 +24,10 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
           api,
           extraOptions
         );
-        console.log(`Refresh Response: ${JSON.stringify(refreshResponse)}`);
         if (refreshResponse?.data) {
-          console.log(`Refresh data found setting auth`);
           api.dispatch(setAuth());
           response = await baseQuery(args, api, extraOptions);
         } else {
-          console.log(`No refresh, loggingout`);
           api.dispatch(setLogout());
         }
       } finally {
@@ -47,7 +44,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 export const baseApiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["User", "Patient"],
+  tagTypes: ["User", "Patient", "Owner"],
   refetchOnFocus: true,
   refetchOnMountOrArgChange: true,
   endpoints: (builder) => ({}),

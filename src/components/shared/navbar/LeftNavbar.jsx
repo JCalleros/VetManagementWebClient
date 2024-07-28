@@ -2,7 +2,8 @@
 
 import { leftNavLinks } from '@/constants';
 import useSidebar from '@/context/hooks/useSidebar';
-import { Drawer, Box, IconButton, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Link, Tooltip } from '@mui/material'
+import { Drawer, Box, IconButton, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tooltip } from '@mui/material'
+import Link from 'next/link';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 
 const drawerWidth = "260px"
@@ -37,13 +38,15 @@ export default function LeftNavbar() {
         <List>
           {leftNavLinks.map(({ path, label, icon }, index) => (
             <Tooltip key={index} title={isSidebarOpen ? '' : label} placement="right">
-              <ListItem component={Link} to={path} disablePadding>
-                <ListItemButton sx={{ minHeight: 48 }}>
-                  <ListItemIcon sx={{ minWidth: 0, mr: isSidebarOpen ? 3 : 'auto', justifyContent: 'center', color: '#FFF' }}>
-                    {icon}
-                  </ListItemIcon>
-                  <ListItemText primary={label} sx={{ opacity: isSidebarOpen ? 1 : 0, color: '#FFF' }} />
-                </ListItemButton>
+              <ListItem disablePadding>
+                <Link href={path}>
+                  <ListItemButton sx={{ minHeight: 48 }}>
+                    <ListItemIcon sx={{ minWidth: 0, mr: isSidebarOpen ? 3 : 'auto', justifyContent: 'center', color: '#FFF' }}>
+                      {icon}
+                    </ListItemIcon>
+                    <ListItemText primary={label} sx={{ opacity: isSidebarOpen ? 1 : 0, color: '#FFF' }} />
+                  </ListItemButton>
+                </Link>
               </ListItem>
             </Tooltip>
           ))}

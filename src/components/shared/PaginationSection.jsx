@@ -13,28 +13,29 @@ const PaginationSection = ({
   const dispatch = useAppDispatch();
 
   const currentPage = useAppSelector((state) =>
-	entityType === "user" ? state.user.page : state.patient.page,
+	  entityType === "user" ? state.user.page : state.patient.page,
   );
 
   const setCurrentPageAction =
-	entityType === "user" ? setUserCurrentPage : setPatientCurrentPage;
+	  entityType === "user" ? setUserCurrentPage : setPatientCurrentPage;
  
   const handleChange = (event, value) => {
-	if (currentPage < value)
+	if (currentPage !== value)
 	  dispatch(setCurrentPageAction(value));
   };
 
   return (
     <Stack spacing={2}>
-	  <Pagination
+      <Pagination
         count={totalPages}
+        page={currentPage}
         sx={{
           marginTop: '1rem',
           borderRadius: '9999px'
         }}
         onChange={handleChange}
       >
-	  </Pagination>
+      </Pagination>
     </Stack>
   );
 };

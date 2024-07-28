@@ -1,4 +1,4 @@
-import PatientDetails from "@/components/patient/PatientDetails";
+import PatientDetails from "@/components/patient/PatientPageDetails";
 
 
 export const metadata = {
