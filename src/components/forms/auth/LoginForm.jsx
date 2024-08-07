@@ -30,7 +30,7 @@ export default function RegisterForm() {
       await loginUser(values).unwrap();
       dispatch(setAuth())
       toast.success("Login Successful")
-      router.push("/patients")
+      router.push("/dashboard")
       reset()
     }catch(e){
       const errorMessage = extractErrorMessage(e)

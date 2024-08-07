@@ -1,4 +1,4 @@
-import { Box, TextField, Typography, Container, FormControl, OutlinedInput, InputAdornment } from "@mui/material";
+import { Box, TextField, Typography, Container, FormControl, OutlinedInput, InputLabel, Select, MenuItem } from "@mui/material";
 import Link from "next/link";
 
 export function FormFieldComponent({
@@ -13,6 +13,9 @@ export function FormFieldComponent({
   link,
   isPassword=false,
   isTextArea=false,
+  isSelect=false,
+  defaultValue="",
+  options=[],
 }){
   const errorMessage = errors[name]?.message;
 
@@ -24,7 +27,6 @@ export function FormFieldComponent({
           {...register(name, {required})}
           fullWidth
           hiddenLabel
-          label={label}
           multiline
           rows={2}
           maxRows={4}
@@ -35,18 +37,35 @@ export function FormFieldComponent({
         <TextField
           {...register(name, {required})}
           fullWidth
-          label={label}
+          hiddenLabel
           type='password'
           placeholder={placeholder}
           disabled={disabled}
         />
       )
-    }else {
+    } else if (isSelect){
+      return (
+        <FormControl fullWidth>
+          <Select
+            {...register(name, { required })}
+            hiddenlabel={"true"}
+            defaultValue={defaultValue}
+            disabled={disabled}
+          >
+            {options.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )
+    } else {
       return (
         <TextField
-          {...register(name, {required})}
+          {...register(name, {required, setValueAs: v => type === 'number' ? Number(v) : v})}
           fullWidth
-          label={label}
+          hiddenLabel
           type={type}
           placeholder={placeholder}
           disabled={disabled}
@@ -58,7 +77,7 @@ export function FormFieldComponent({
   return (
     <Box sx={{ mb: 1 }}>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography variant="h5" sx={{ fontWeight: "bold", color: "babyPowder", mb: 1 }}>
+        <Typography variant="h7" sx={{ color: "babyPowder", mb: 1 }}>
           {label}
         </Typography>
         {link && (

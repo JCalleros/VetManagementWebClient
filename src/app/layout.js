@@ -4,7 +4,7 @@ import Toast from "@/components/shared/Toast";
 import { PersistAuth } from "@/utils";
 
 export const metadata = {
-  title: "Home | Alpha Apartments",
+  title: "Home | Vet Management",
   description: "Welcome home",
 };
 

@@ -2,18 +2,18 @@ import { BookOpenText, LayoutDashboard, PawPrint } from "lucide-react";
 
 export const leftNavLinks = [
   {
-    path: "",
+    path: "/dashboard",
     label: "Dashboard",
     icon: <LayoutDashboard />,
   },
   {
-    path: "Appointments",
-    label: "Dashboard",
+    path: "/dashboard/appointments",
+    label: "Appointments",
     icon: <BookOpenText />,
   },
   {
-    path: "Patients",
-    label: "Dashboard",
+    path: "/dashboard/patients",
+    label: "Patients",
     icon: <PawPrint />,
   },
 ];

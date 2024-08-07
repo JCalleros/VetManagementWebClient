@@ -1,7 +1,9 @@
 import LeftNavbar from "@/components/shared/navbar/LeftNavbar";
+import MobileNavbar from "@/components/shared/navbar/MobileNavbar";
 import Navbar from "@/components/shared/navbar/Navbar";
 import ProtectedRoute from "@/components/shared/ProtectedRoutes";
-import { AppBar, Box, Drawer, Toolbar } from "@mui/material";
+import { SidebarProvider } from "@/context/sidebarContext";
+import { Box } from "@mui/material";
 
 export const metadata = {
   title: "Dashboard | Vet Management",
@@ -11,10 +13,14 @@ export const metadata = {
 export default function layout({ children }) {
   return (
     <Box
-      sx={{display: 'flex', height: "100vh", overflow: 'hidden'}}
+      sx={{display: 'flex', height: "100vh", overflow: "hidden" }}
     > 
-      <Navbar />
-      <LeftNavbar />
+      <SidebarProvider>
+        <Navbar />
+        <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+          <LeftNavbar />
+        </Box>
+      </SidebarProvider>
       <Box
         sx={{
           transition: 'margin-left 0.3s',
@@ -22,15 +28,17 @@ export default function layout({ children }) {
           backgroundColor: '#f5f5f5',
           display: 'flex',
           flexGrow: 1,
-          p: 2,
+          mb: { xs: 10, sm: 3 }, 
+          overflowY: 'auto'
         }}
       >
         <ProtectedRoute>
           {children}
         </ProtectedRoute>
       </Box>
-        
-
+      <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
+        <MobileNavbar />
+      </Box> 
     </Box>
   );
 }
