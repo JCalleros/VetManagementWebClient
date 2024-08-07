@@ -8,6 +8,9 @@ import PatientCard from '@/components/cards/PatientCard';
 import { useGetAllPatientsQuery } from '@/lib/redux/features/patients/patientsApiSlice';
 import PatientSearch from '@/components/shared/search/PatientSearch';
 import PatientModalFrom from '@/components/modals/patients/PatientModalForm';
+import PatientsCardsSection from './PatientCardsSection';
+
+
 
 
 export default function PatientPageContent({params}) {
@@ -64,23 +67,7 @@ export default function PatientPageContent({params}) {
           <CircularProgress />
         </Box>
       ) : (
-        <Grid container spacing={3}>
-          <AnimatePresence>
-            {data && data.patients.results.length > 0 ? (
-              data.patients.results.map((patient) => (
-                <Grid key={patient.id} item xs={12} sm={6} md={4} lg={3}>
-                  <PatientCard patient={patient} onPatientDeleted={handlePatientDeleted} />
-                </Grid>
-              ))
-            ) : (
-              <Grid item xs={12}>
-                <Typography variant="h6" align="center">
-                  No patients found.
-                </Typography>
-              </Grid>
-            )}
-          </AnimatePresence>
-        </Grid>
+        <PatientsCardsSection data={data} handlePatientDeleted={handlePatientDeleted} />
       )}
       <Box sx={{ display: 'flex', mt: 4, justifyContent: 'center' }}>
         <PaginationSection totalPages={totalPages} entityType="patient" />
