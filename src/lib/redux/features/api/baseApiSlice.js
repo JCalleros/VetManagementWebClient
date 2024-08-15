@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setAuth, setLogout } from "@/lib/redux/features/auth/authSlice";
 import { Mutex } from "async-mutex";
+
 const mutex = new Mutex();
 
 const baseQuery = fetchBaseQuery({
@@ -23,7 +24,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
           api,
           extraOptions
         );
-
         if (refreshResponse?.data) {
           api.dispatch(setAuth());
           response = await baseQuery(args, api, extraOptions);
@@ -44,7 +44,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 export const baseApiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["User"],
+  tagTypes: ["User", "Patient", "Owner", "Appointment"],
   refetchOnFocus: true,
   refetchOnMountOrArgChange: true,
   endpoints: (builder) => ({}),

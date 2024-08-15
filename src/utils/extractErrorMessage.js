@@ -1,7 +1,6 @@
 export default function extractErrorMessage(error) {
   if (typeof error === "object" && error !== null && "data" in error) {
     const errorData = error.data;
-
     if ("detail" in errorData && typeof errorData.detail === "string") {
       return errorData.detail;
     }

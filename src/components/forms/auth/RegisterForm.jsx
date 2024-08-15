@@ -18,15 +18,13 @@ export default function RegisterForm() {
     resolver: zodResolver(registerUserSchema),
     mode: "all",
     defaultValues: {
-      username: "",
-      first_name: "",
-      last_name: "",
+      name: "",
       email: "",
       password: "",
       re_password: ""
     }
   })
-
+  
   const onSubmit = async(values)=>{
     try {
       await registerUser(values).unwrap();
@@ -42,10 +40,10 @@ export default function RegisterForm() {
   }
   
   return (
-    <Box
-      component="form"
-      onSubmit={onSubmit}
-      sx={{
+    <form
+      noValidate
+      onSubmit={handleSubmit(onSubmit)}
+      style={{
         backgroundColor: 'rgba(255, 255, 255, 0.9)',
         padding: '2rem',
         borderRadius: '24px',
@@ -67,7 +65,7 @@ export default function RegisterForm() {
         name="name"
         register={register}
         errors={errors}
-        placeholder="Enter your name"
+        placeholder="John Malillon..."
       />
       <FormFieldComponent
         label="Email Address"
@@ -106,6 +104,6 @@ export default function RegisterForm() {
     >
       {isLoading ? "Loading..." : "Submit"}
     </Button>
-  </Box>
+  </form>
   )
 }
