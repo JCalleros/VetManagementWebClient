@@ -3,6 +3,7 @@ import authReducer from "@/lib/redux/features/auth/authSlice";
 import userReducer from "@/lib/redux/features/users/userSlice";
 import patientReducer from "@/lib/redux/features/patients/patientSlice";
 import ownerReducer from "@/lib/redux/features/owners/ownerSlice";
+import appointmentReducer from "@/lib/redux/features/appointments/appointmentSlice";
 
 export const rootReducer = {
   [baseApiSlice.reducerPath]: baseApiSlice.reducer,
@@ -10,4 +11,5 @@ export const rootReducer = {
   user: userReducer,
   patient: patientReducer,
   owner: ownerReducer,
+  appointment: appointmentReducer,
 };
