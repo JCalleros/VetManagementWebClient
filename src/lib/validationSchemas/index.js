@@ -5,4 +5,5 @@ export {
   patientOwnerSchema,
   patientCompletSchema,
 } from "./PatientSchema";
+export { appointmentSchema } from "./AppointmentSchema";
 export { ownerSchema } from "./OwnerSchema";

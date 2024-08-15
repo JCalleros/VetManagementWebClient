@@ -12,33 +12,35 @@ export const metadata = {
 
 export default function layout({ children }) {
   return (
-    <Box
-      sx={{display: 'flex', height: "100vh", overflow: "hidden" }}
-    > 
-      <SidebarProvider>
-        <Navbar />
-        <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-          <LeftNavbar />
-        </Box>
-      </SidebarProvider>
+    <ProtectedRoute>
       <Box
-        sx={{
-          transition: 'margin-left 0.3s',
-          mt: '64px',
-          backgroundColor: '#f5f5f5',
-          display: 'flex',
-          flexGrow: 1,
-          mb: { xs: 10, sm: 3 }, 
-          overflowY: 'auto'
-        }}
-      >
-        <ProtectedRoute>
-          {children}
-        </ProtectedRoute>
+        sx={{display: 'flex', height: "100vh", overflow: "hidden" }}
+      > 
+        <SidebarProvider>
+          <Navbar />
+          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+            <LeftNavbar />
+          </Box>
+        </SidebarProvider>
+        <Box
+          sx={{
+            transition: 'margin-left 0.3s',
+            mt: '64px',
+            backgroundColor: '#f5f5f5',
+            display: 'flex',
+            flexGrow: 1,
+            mb: { xs: 10, sm: 3 }, 
+            overflowY: 'auto'
+          }}
+        >
+            {children}
+          
+        </Box>
+        <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
+          <MobileNavbar />
+        </Box> 
       </Box>
-      <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
-        <MobileNavbar />
-      </Box> 
-    </Box>
+    </ProtectedRoute>
+    
   );
 }

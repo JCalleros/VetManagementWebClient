@@ -19,9 +19,9 @@ function ProtectedRoute({children}){
         dispatch(setAuth())
       } else {
         dispatch(setLogout())
-        router.push("/login")
+        router.replace("/login")
       }
-      setIsLoading(false);
+      setTimeout(() => setIsLoading(false), 500);
     }
 
     handleAuthState()
@@ -30,8 +30,10 @@ function ProtectedRoute({children}){
   if (isLoading) {
     return (
       <Box sx={{
-        alignContent: 'center',
-        paddingTop: '8rem',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
       }}>
         Loading..{/* <Spinner size="xl" /> */}
       </Box>

@@ -64,11 +64,11 @@ const PatientCardContent = ({patient}) => {
       </Typography>
       
       <Typography variant="body2" color="text.secondary">
-        Owner Name: {patient.owner_name}
+        Owner Name: {patient.owner.name}
       </Typography>
       
       <Typography variant="body2" color="text.secondary">
-        Owner Phone: {patient.owner_phone_number}
+        Owner Phone: {patient.owner.phone_number}
       </Typography>
     </CardContent>
   )
@@ -76,8 +76,7 @@ const PatientCardContent = ({patient}) => {
 const PatientCard = ({ patient, onPatientDeleted}) => {
   const [deletePatient] = useDeletePatientMutation();
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const router = useRouter();
-
+  
   const handleDeletePatient = async () => {
     if (patient?.id) {
 			try {
