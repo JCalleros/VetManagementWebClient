@@ -4,6 +4,7 @@ import { Mutex } from "async-mutex";
 
 const mutex = new Mutex();
 
+console.log(`Configuring base api: ${process.env.NEXT_PUBLIC_API_URL}`);
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_API_URL || "/api/v1",
   credentials: "include",
