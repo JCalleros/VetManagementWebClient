@@ -15,9 +15,12 @@ function ProtectedRoute({children}){
   useEffect(()=>{
     const handleAuthState = async () => {
       const isLoggedIn = getCookie("logged_in") === "true";
+      
       if (isLoggedIn){
+        console.log("Logged in")
         dispatch(setAuth())
       } else {
+        console.log(`Loggind out`)
         dispatch(setLogout())
         router.replace("/login")
       }
