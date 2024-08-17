@@ -14,8 +14,9 @@ function ProtectedRoute({children}){
 
   useEffect(()=>{
     const handleAuthState = async () => {
+      console.log("Using effect");
       const isLoggedIn = getCookie("logged_in") === "true";
-      
+      console.log(`Is logged in cookie: ${isLoggedIn}`)
       if (isLoggedIn){
         console.log("Logged in")
         dispatch(setAuth())
