@@ -14,6 +14,11 @@ function ProtectedRoute({children}){
 
   useEffect(()=>{
     const handleAuthState = async () => {
+      if (typeof document !== "undefined") {
+        console.log("All cookies:", document.cookie);
+      } else {
+        console.log("Document is undefined");
+      }
       console.log("Using effect");
       const isLoggedIn = getCookie("logged_in") === "true";
       console.log(`Is logged in cookie: ${isLoggedIn}`)
@@ -23,7 +28,7 @@ function ProtectedRoute({children}){
       } else {
         console.log(`Loggind out`)
         dispatch(setLogout())
-        router.replace("/login")
+        router.push("/login")
       }
       setTimeout(() => setIsLoading(false), 500);
     }
