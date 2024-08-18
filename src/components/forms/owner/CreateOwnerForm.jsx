@@ -38,7 +38,6 @@ export default function CreateOwnerForm({ onClose }) {
       toast.success("Owner has been created");
       onClose(owner);
     } catch (error) {
-      console.log(`Error: ${error}`)
       const errorMessage = extractErrorMessage(error);
       toast.error(errorMessage || "An error occurred");
     }

@@ -14,21 +14,13 @@ function ProtectedRoute({children}){
 
   useEffect(()=>{
     const handleAuthState = async () => {
-      if (typeof document !== "undefined") {
-        console.log("All cookies:", document.cookie);
+      const accessToken = localStorage.getItem("accessToken");
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (accessToken && refreshToken) {
+        dispatch(setAuth({ accessToken: accessToken, refreshToken: refreshToken }));
       } else {
-        console.log("Document is undefined");
-      }
-      console.log("Using effect");
-      const isLoggedIn = getCookie("logged_in") === "true";
-      console.log(`Is logged in cookie: ${isLoggedIn}`)
-      if (isLoggedIn){
-        console.log("Logged in")
-        dispatch(setAuth())
-      } else {
-        console.log(`Loggind out`)
-        dispatch(setLogout())
-        router.push("/login")
+        dispatch(setLogout());
+        router.push("/login");
       }
       setTimeout(() => setIsLoading(false), 500);
     }

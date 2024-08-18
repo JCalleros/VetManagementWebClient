@@ -27,8 +27,11 @@ export default function RegisterForm() {
 
   const onSubmit = async(values)=>{
     try {
-      await loginUser(values).unwrap();
-      dispatch(setAuth())
+      const response = await loginUser(values).unwrap();
+      const { access, refresh } = response; // Correctly destructure the response
+
+      // Dispatch the tokens to setAuth
+      dispatch(setAuth({ accessToken: access, refreshToken: refresh }));
       toast.success("Login Successful")
       router.push("/dashboard")
       reset()

@@ -4,10 +4,15 @@ import { Mutex } from "async-mutex";
 
 const mutex = new Mutex();
 
-console.log(`Configuring base api: ${process.env.NEXT_PUBLIC_API_URL}`);
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_API_URL || "/api/v1",
-  credentials: "include",
+  prepareHeaders: (headers) => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+    return headers;
+  },
 });
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {
@@ -17,17 +22,31 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
     if (!mutex.isLocked()) {
       const release = await mutex.acquire();
       try {
-        const refreshResponse = await baseQuery(
-          {
-            url: "/auth/refresh/",
-            method: "POST",
-          },
-          api,
-          extraOptions
-        );
-        if (refreshResponse?.data) {
-          api.dispatch(setAuth());
-          response = await baseQuery(args, api, extraOptions);
+        const refreshToken = localStorage.getItem("refreshToken");
+        if (refreshToken) {
+          const refreshResponse = await baseQuery(
+            {
+              url: "/auth/refresh/",
+              method: "POST",
+              body: { refresh: refreshToken },
+            },
+            api,
+            extraOptions
+          );
+
+          if (refreshResponse?.data) {
+            api.dispatch(
+              setAuth({
+                accessToken: refreshResponse.data.access,
+                refreshToken: refreshResponse.data.refresh,
+              })
+            );
+            response = await baseQuery(args, api, extraOptions);
+          } else {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            api.dispatch(setLogout());
+          }
         } else {
           api.dispatch(setLogout());
         }

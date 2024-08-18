@@ -55,8 +55,6 @@ export default function AppointmentsPageContent({ params }) {
 
   const appointments = data?.appointments?.results || [];
 
-  console.log(`Appointments: ${JSON.stringify(appointments)}`);
-
   return (
     <Box
       sx={{
