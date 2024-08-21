@@ -17,3 +17,5 @@ export const leftNavLinks = [
     icon: <PawPrint />,
   },
 ];
+
+export const timeZone = "UTC";

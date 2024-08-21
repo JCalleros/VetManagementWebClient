@@ -29,7 +29,7 @@ export default function LeftNavbar() {
           },
         }}
       >
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '64px', backgroundColor: '#35495e' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '64px', backgroundColor: '#35495e' }}>
           <IconButton onClick={toggleSidebar} sx={{ color: '#fff' }}>
             {isSidebarOpen ? <ChevronLeft /> : <ChevronRight />}
           </IconButton>
@@ -38,7 +38,7 @@ export default function LeftNavbar() {
         <List>
           {leftNavLinks.map(({ path, label, icon }, index) => (
             <Tooltip key={index} title={isSidebarOpen ? '' : label} placement="right">
-              <ListItem disablePadding>
+              <ListItem disablePadding >
                 <Link href={path}>
                   <ListItemButton sx={{ minHeight: 48 }}>
                     <ListItemIcon sx={{ minWidth: 0, mr: isSidebarOpen ? 3 : 'auto', justifyContent: 'center', color: '#FFF' }}>

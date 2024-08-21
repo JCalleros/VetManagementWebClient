@@ -8,9 +8,12 @@ export default function PersistAuth() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const isLoggedIn = getCookie("logged_in") === "true";
-    if (isLoggedIn) {
-      dispatch(setAuth());
+    const accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (accessToken && refreshToken) {
+      dispatch(
+        setAuth({ accessToken: accessToken, refreshToken: refreshToken })
+      );
     } else {
       dispatch(setLogout());
     }
