@@ -1,9 +1,5 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import Image from "next/image";
 import Link from "next/link";
-
-// import Link from "next/link";
-// import { ArrowRightIcon } from "@heroicons/react/24/solid";
 
 export const metadata = {
   title: "Home | Vet Management",

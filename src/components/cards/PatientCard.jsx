@@ -73,6 +73,8 @@ const PatientCardContent = ({patient}) => {
     </CardContent>
   )
 }
+
+
 const PatientCard = ({ patient, onPatientDeleted}) => {
   const [deletePatient] = useDeletePatientMutation();
   const [confirmOpen, setConfirmOpen] = useState(false);

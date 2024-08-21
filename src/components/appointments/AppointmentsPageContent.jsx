@@ -3,15 +3,21 @@
 import { useState } from 'react';
 import { Box, Button, CircularProgress, useMediaQuery, useTheme, Typography } from '@mui/material';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useAppSelector } from '@/lib/redux/hooks/typedHooks';
 import { useGetAllAppointmentsQuery } from '@/lib/redux/features/appointments/appointmentsApiSlice';
 import AppointmentModalForm from '../modals/appointments/AppointmentModalForm';
+import ModalForm from '../modals/ModalForm';
+import CreateAppointmentForm from '../forms/appointment/CreateAppointmentForm';
+import { useRouter } from 'next/navigation';
 
 const localizer = momentLocalizer(moment);
+moment.tz.setDefault('utc')
+
 
 export default function AppointmentsPageContent({ params }) {
+  const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [newEventStart, setNewEventStart] = useState(null);
@@ -35,13 +41,15 @@ export default function AppointmentsPageContent({ params }) {
 
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => setModalOpen(false);
+
   const handleSelectEvent = (event) => {
-    setSelectedEvent(event);
-    setModalOpen(true);
+    const slug = event.id;
+    router.push(`/dashboard/appointments/${slug}`);
   };
 
   const handleSelectSlot = (slotInfo) => {
-    setNewEventStart(slotInfo.start);
+    const utcStart = moment(slotInfo.start).utc().toISOString();
+    setNewEventStart(utcStart);
     setModalOpen(true);
   };
 
@@ -56,6 +64,7 @@ export default function AppointmentsPageContent({ params }) {
   const appointments = data?.appointments?.results || [];
 
   return (
+    <>
     <Box
       sx={{
         display: 'flex',
@@ -66,31 +75,17 @@ export default function AppointmentsPageContent({ params }) {
         backgroundColor: '#f5f5f5',
       }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: { xs: 1, sm: 2 },
-          backgroundColor: '#fff',
-          boxShadow: 1,
-          borderRadius: 1,
-          marginBottom: 2,
-        }}
-      >
-        {/* <AppointmentSearch /> */}
-      </Box>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
         <Button
           variant="contained"
           color="primary"
           onClick={handleModalOpen}
           sx={{
-            backgroundColor: '#1976d2', // Primary color for the button
+            backgroundColor: '#1976d2',
             '&:hover': {
-              backgroundColor: '#1565c0', // Darker shade on hover
+              backgroundColor: '#1565c0',
             },
-            fontSize: { xs: '0.75rem', sm: '1rem' }, // Responsive font size
+            fontSize: { xs: '0.75rem', sm: '1rem' },
           }}
         >
           Add Appointment
@@ -119,7 +114,7 @@ export default function AppointmentsPageContent({ params }) {
               {appointments.map((appointment) => (
                 <li key={appointment.id} style={{ marginBottom: '1rem' }}>
                   <Typography variant="body1" fontWeight="bold" sx={{ color: '#1976d2' }}>
-                    {`${appointment.patient.name} - ${appointment.service_type}`}
+                    {`${appointment.patients.map(patient => patient.name).join(', ')} - ${appointment.service_type}`}
                   </Typography>
                   <Typography variant="body2" sx={{ color: '#757575' }}>
                     {moment(appointment.date).format('MMMM Do, h:mm a')}
@@ -131,13 +126,18 @@ export default function AppointmentsPageContent({ params }) {
         ) : (
           <Calendar
             localizer={localizer}
-            events={appointments.map(appointment => ({
-              id: appointment.id,
-              title: `${appointment.patient.name} - ${appointment.service_type}`, 
-              start: new Date(appointment.date),
-              end: new Date(appointment.date),
-              allDay: false,
-            }))}
+            events={appointments.map(appointment => {
+              const localStart = moment.utc(appointment.date).toDate();
+              const localEnd = moment.utc(appointment.date).add(15, 'minutes').toDate();
+              
+              return {
+                id: appointment.id,
+                title: `${appointment.patients.map(patient => patient.name).join(', ')} - ${appointment.service_type}`,
+                start: localStart,
+                end: localEnd,
+                allDay: false,
+              };
+            })}
             startAccessor="start"
             endAccessor="end"
             style={{ height: '100%' }}
@@ -147,15 +147,15 @@ export default function AppointmentsPageContent({ params }) {
             onView={handleViewChange}
             onSelectEvent={handleSelectEvent}
             onSelectSlot={handleSelectSlot}
-            selectable // Enables selection of time slots
+            selectable
             eventPropGetter={(event) => ({
               style: {
-                backgroundColor: '#1976d2', // Primary color for event background
-                color: '#fff', // White text
+                backgroundColor: '#1976d2',
+                color: '#fff',
                 borderRadius: '5px',
-                transition: 'transform 0.3s ease-in-out', // Animation transition
+                transition: 'transform 0.3s ease-in-out',
                 '&:hover': {
-                  transform: 'scale(1.05)', // Slightly enlarge on hover
+                  transform: 'scale(1.05)',
                   cursor: 'pointer',
                 },
               },
@@ -163,7 +163,10 @@ export default function AppointmentsPageContent({ params }) {
           />
         )}
       </Box>
-      <AppointmentModalForm open={modalOpen} onClose={handleModalClose} event={selectedEvent} start={newEventStart} />
+      <ModalForm open={modalOpen} onClose={handleModalClose} title="Create Appointment" submitLabel="Create Appointment"> 
+        <CreateAppointmentForm onClose={handleModalClose} initialDate={newEventStart} />
+      </ModalForm>
     </Box>
+    </>
   );
 }

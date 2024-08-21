@@ -4,19 +4,20 @@ import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks/typedHooks";
 import { Box, IconButton, InputAdornment, TextField } from "@mui/material";
 import React from "react";
 import { Search, X } from "lucide-react";
+import debounce from "lodash.debounce";
 
 const PatientSearch = () => {
   const dispatch = useAppDispatch();
   const searchTerm = useAppSelector((state) => state.patient.searchTerm);  
   
-  const handleInputChange = (event) => {
-    dispatch(setSearchTerm(event.target.value));
-  };
-
+  const handleSearch = debounce((event) => {
+    const term = event.target.value.toLowerCase();
+    dispatch(setSearchTerm(term));
+  }, 500);
+  
   const handleClearSearch = () => {
     dispatch(setSearchTerm(''));
   };
-
 
   return (
     <Box
@@ -33,8 +34,7 @@ const PatientSearch = () => {
       <TextField
         placeholder="Search pets or owner"
         variant="outlined"
-        value={searchTerm}
-        onChange={handleInputChange}
+        onChange={handleSearch}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
