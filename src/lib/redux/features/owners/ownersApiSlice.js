@@ -19,6 +19,9 @@ export const ownerApiSlice = baseApiSlice.injectEndpoints({
         if (params.searchTerm) {
           queryString.append("search", params.searchTerm);
         }
+        if (params.limit) {
+          queryString.append("limit", params.limit.toString());
+        }
         return `/owners/?${queryString.toString()}`;
       },
       providesTags: ["Owner"],

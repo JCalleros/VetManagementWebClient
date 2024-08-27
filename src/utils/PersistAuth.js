@@ -1,5 +1,4 @@
 "use client";
-import { getCookie } from "cookies-next";
 import { useAppDispatch } from "@/lib/redux/hooks/typedHooks";
 import { useEffect } from "react";
 import { setAuth, setLogout } from "@/lib/redux/features/auth/authSlice";

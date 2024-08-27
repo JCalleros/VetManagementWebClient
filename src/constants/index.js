@@ -1,4 +1,4 @@
-import { BookOpenText, LayoutDashboard, PawPrint } from "lucide-react";
+import { BookOpenText, LayoutDashboard, PawPrint, LogOut } from "lucide-react";
 
 export const leftNavLinks = [
   {
@@ -15,6 +15,11 @@ export const leftNavLinks = [
     path: "/dashboard/patients",
     label: "Patients",
     icon: <PawPrint />,
+  },
+  {
+    path: "/logout",
+    label: "Logout",
+    icon: <LogOut />,
   },
 ];
 

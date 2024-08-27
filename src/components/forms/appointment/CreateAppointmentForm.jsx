@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks/typedHooks';
 import { setSearchTerm } from "@/lib/redux/features/owners/ownerSlice";
 import PatientModalSelection from '@/components/modals/patients/PatientModalSelection';
 import moment from 'moment-timezone';
+import SearchCreateOwner from '@/components/shared/search/SearchCreateOwner';
 const defaultPhotoCat = '/assets/images/defaultPatientCatPhoto.webp';
 const defaultPhotoDog = '/assets/images/defaultPatientCatPhoto.webp';
 
@@ -30,7 +31,6 @@ export default function CreateAppointmentForm({ onClose, initialDate="" }) {
   const dispatch = useAppDispatch();
   const searchTerm = useAppSelector((state) => state.owner.searchTerm);
   const [createAppointment, { isLoading }] = useCreateAppointmentMutation();
-  const [selectedOwner, setSelectedOwner] = useState(null);
   const [selectedPatients, setSelectedPatients] = useState([]);
   const [openPatientModal, setOpenPatientModal] = useState(false);
   const { data: owners, isLoading: loadingOwners } = useGetAllOwnersQuery({ searchTerm, page: 1 });
@@ -40,6 +40,7 @@ export default function CreateAppointmentForm({ onClose, initialDate="" }) {
     control,
     setValue,
     formState: { errors },
+    watch
   } = useForm({
     resolver: zodResolver(appointmentSchema),
     mode: 'all',
@@ -52,12 +53,18 @@ export default function CreateAppointmentForm({ onClose, initialDate="" }) {
     },
   });
 
+
+  const selectedOwner = watch("owner");
+  const selectedServiceType = watch("service_type");
+
   useEffect(() => {
     if (selectedOwner) {
       setValue('patients', selectedPatients.map(p => p.id));
       setSelectedPatients([]);
+      setOpenPatientModal(true);
     } else {
       setValue('patients', [])
+      setSelectedPatients([]);
     }
   }, [selectedOwner, setValue]);
 
@@ -69,18 +76,6 @@ export default function CreateAppointmentForm({ onClose, initialDate="" }) {
     } catch (error) {
       const errorMessage = extractErrorMessage(error);
       toast.error(errorMessage || "An error occurred");
-    }
-  };
-
-  
-  const handleSearchOwner = debounce((event) => {
-    dispatch(setSearchTerm(event.target.value));
-  }, 500);
-
-  const handleOwnerChange = (_, newValue) => {
-    setSelectedOwner(newValue);
-    if (newValue) {
-      setOpenPatientModal(true);
     }
   };
 
@@ -144,25 +139,7 @@ export default function CreateAppointmentForm({ onClose, initialDate="" }) {
           </Grid>
 
           <Grid item xs={12}>
-            <Autocomplete
-              options={owners?.owners?.results || []}
-              getOptionLabel={(owner) => owner.name}
-              isOptionEqualToValue={(option, value) => option.id === value.id}
-              onInputChange={handleSearchOwner}
-              onChange={handleOwnerChange}
-              value={selectedOwner}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Select Owner"
-                  fullWidth
-                  variant="outlined"
-                  required
-                  error={!!errors.owner}
-                  helperText={errors.owner?.message}
-                />
-              )}
-            />
+            <SearchCreateOwner control={control} />
           </Grid>
 
           {selectedPatients.length > 0 && (
@@ -218,7 +195,7 @@ export default function CreateAppointmentForm({ onClose, initialDate="" }) {
         </Grid>
 
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', backgroundColor: 'white', padding: '8px 0' }}>
-          <Button fullWidth type="submit" variant="contained" color="primary" disabled={isLoading}>
+          <Button fullWidth type="submit" variant="contained" color="primary"  disabled={isLoading || !selectedOwner || selectedPatients.length === 0 || !selectedServiceType}>
             {isLoading ? <CircularProgress size={24} /> : "Create Appointment"}
           </Button>
         </Box>

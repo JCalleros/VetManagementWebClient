@@ -1,18 +1,22 @@
 import React, { useEffect } from 'react';
 import { Box, Button, CircularProgress, Modal, List, ListItem, ListItemIcon, Checkbox, ListItemText, Typography } from '@mui/material';
 import { useGetAllPatientsQuery } from '@/lib/redux/features/patients/patientsApiSlice';
+import { useGetSingleOwnerQuery } from '@/lib/redux/features/owners/ownersApiSlice';
 
 export default function PatientModalSelection({ open, onClose, selectedOwner, selectedPatients, setSelectedPatients }) {
+  const { data: ownerDetails, isLoading: loadingOwner } = useGetSingleOwnerQuery(selectedOwner, { skip: !selectedOwner });
+
   const { data: patients, refetch: fetchPatientsByOwner, isFetching: loadingPatients } = useGetAllPatientsQuery(
-    { searchTerm: selectedOwner?.phone_number || selectedOwner?.name || '', page: 1 },
-    { skip: !selectedOwner }
+    { searchTerm: ownerDetails?.owner?.phone_number || ownerDetails?.owner?.name || '', page: 0 },
+    { skip: !ownerDetails }
   );
 
   useEffect(() => {
-    if (selectedOwner) {
+    if (ownerDetails) {
       fetchPatientsByOwner();
     }
-  }, [selectedOwner, fetchPatientsByOwner]);
+  }, [ownerDetails, fetchPatientsByOwner]);
+
 
   const togglePatientSelection = (patient) => {
     const isSelected = selectedPatients.some((p) => p.id === patient.id);

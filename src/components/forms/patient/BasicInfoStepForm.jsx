@@ -13,35 +13,37 @@ const PatientAgeSectionForm = ({ setIsStepValid }) => {
   return (
     <>
       <FormStepperHeader title={"Age"} />
-      <Grid item xs={4}>
-        <FormFieldComponent
-          label="Years"
-          name="age_years"
-          type="number"
-          register={register}
-          errors={errors}
-          placeholder="1..."
-        />
-      </Grid>
-      <Grid item xs={4}>
-        <FormFieldComponent
-          label="Months"
-          name="age_months"
-          register={register}
-          type="number"
-          errors={errors}
-          placeholder="4..."
-        />
-      </Grid>
-      <Grid item xs={4}>
-        <FormFieldComponent
-          label="Weeks"
-          name="age_weeks"
-          register={register}
-          type="number"
-          errors={errors}
-          placeholder="3..."
-        />
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={4}>
+          <FormFieldComponent
+            label="Years"
+            name="age_years"
+            type="number"
+            register={register}
+            errors={errors}
+            placeholder="1..."
+          />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <FormFieldComponent
+            label="Months"
+            name="age_months"
+            register={register}
+            type="number"
+            errors={errors}
+            placeholder="4..."
+          />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <FormFieldComponent
+            label="Weeks"
+            name="age_weeks"
+            register={register}
+            type="number"
+            errors={errors}
+            placeholder="3..."
+          />
+        </Grid>
       </Grid>
     </>
   )
@@ -65,64 +67,65 @@ const PatientBasicSectionForm = ({ setIsStepValid }) => {
   useEffect(() => {
     const result = patientGeneralSchema.safeParse(watchedValues);
     setIsStepValid(result.success);
-  })
+  }, [watchedValues, setIsStepValid])
 
   return (
     <>
-      <FormStepperHeader title={"Basic Information"} />
-      <Grid item xs={12} sm={6}>
-        <FormFieldComponent 
-          label="Name"
-          name="name"
-          required={true}
-          register={register}
-          errors={errors}
-          placeholder={"Max..."}
-        />
-      </Grid>
-      <Grid item xs={6} sm={3}>
-        <FormFieldComponent
-          label="Gender"
-          name="gender"
-          required={true}
-          register={register}
-          errors={errors}
-          isSelect={true}
-          defaultValue={genderOptions[0].value}
-          options={genderOptions}
-          setValue={setValue}
-        />
-      </Grid>
-      <Grid item xs={6} sm={3}>
-        <FormFieldComponent
-          label="Species"
-          name="species"
-          required={true}
-          register={register}
-          errors={errors}
-          isSelect={true}
-          defaultValue={speciesOptions[0].value}
-          options={speciesOptions}
-          setValue={setValue}
-        />
-      </Grid>
-      <Grid item xs={6}>
-        <FormFieldComponent
-          label="Breed"
-          name="breed"
-          register={register}
-          errors={errors}
-          placeholder="Golden Retriever..."
-        />
-      </Grid>
-      <Grid item xs={6}>
-        <FormFieldComponent
-          label="Color"
-          name="color"
-          register={register}
-          errors={errors}
-          placeholder="Gold..."
-        />
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6}>
+          <FormFieldComponent 
+            label="Name"
+            name="name"
+            required={true}
+            register={register}
+            errors={errors}
+            placeholder="Max..."
+          />
+        </Grid>
+        <Grid item xs={6} sm={3}>
+          <FormFieldComponent
+            label="Gender"
+            name="gender"
+            required={true}
+            register={register}
+            errors={errors}
+            isSelect={true}
+            defaultValue={genderOptions[0].value}
+            options={genderOptions}
+            setValue={setValue}
+          />
+        </Grid>
+        <Grid item xs={6} sm={3}>
+          <FormFieldComponent
+            label="Species"
+            name="species"
+            required={true}
+            register={register}
+            errors={errors}
+            isSelect={true}
+            defaultValue={speciesOptions[0].value}
+            options={speciesOptions}
+            setValue={setValue}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <FormFieldComponent
+            label="Breed"
+            name="breed"
+            register={register}
+            errors={errors}
+            placeholder="Golden Retriever..."
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <FormFieldComponent
+            label="Color"
+            name="color"
+            register={register}
+            errors={errors}
+            placeholder="Gold..."
+          />
+        </Grid>
       </Grid>
     </>
   )
@@ -130,7 +133,7 @@ const PatientBasicSectionForm = ({ setIsStepValid }) => {
 
 
 export default function BasicInfoStepForm({ setIsStepValid }) {
-  const { register, control, setValue, formState: { errors }, watch } = useFormContext();
+  const { control, setValue, formState: { errors }, watch } = useFormContext();
 
   const watchedValues = watch();
 
@@ -141,7 +144,7 @@ export default function BasicInfoStepForm({ setIsStepValid }) {
 
   
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={{xs: 1, sm: 2}}>
       <PatientBasicSectionForm setIsStepValid={setIsStepValid} />
       <PatientAgeSectionForm setIsStepValid={setIsStepValid} />
     </Grid>

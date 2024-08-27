@@ -11,8 +11,6 @@ import PatientModalFrom from '@/components/modals/patients/PatientModalForm';
 import PatientsCardsSection from './PatientCardsSection';
 
 
-
-
 export default function PatientPageContent({params}) {
   const [modalOpen, setModalOpen] = useState(false);
   const searchTerm = useAppSelector((state) => state.patient.searchTerm);
