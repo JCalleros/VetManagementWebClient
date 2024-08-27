@@ -5,10 +5,26 @@ import useSidebar from '@/context/hooks/useSidebar';
 import { Drawer, Box, IconButton, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tooltip } from '@mui/material'
 import Link from 'next/link';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 const drawerWidth = "260px"
 export default function LeftNavbar() {
+  const router = useRouter();
   const { isSidebarOpen, toggleSidebar } = useSidebar();
+  const topLinks = leftNavLinks.slice(0, -1);
+  const bottomLink = leftNavLinks[leftNavLinks.length - 1];
+
+
+  const handleLogout =  () => {
+    try {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      router.push("/login");
+    } catch (error) {
+      toast.error("Logout failed:", error);
+    }
+  };
 
   return (
     <>
@@ -36,7 +52,7 @@ export default function LeftNavbar() {
         </Box>
         <Divider sx={{ borderColor: '#fff' }} />
         <List>
-          {leftNavLinks.map(({ path, label, icon }, index) => (
+          {topLinks.map(({ path, label, icon }, index) => (
             <Tooltip key={index} title={isSidebarOpen ? '' : label} placement="right">
               <ListItem disablePadding >
                 <Link href={path}>
@@ -50,6 +66,22 @@ export default function LeftNavbar() {
               </ListItem>
             </Tooltip>
           ))}
+        </List>
+        
+        <Divider sx={{ borderColor: '#fff', marginTop: 'auto' }} />
+
+        <List>
+          <Tooltip title={isSidebarOpen ? '' : bottomLink.label} placement="right">
+            <ListItem disablePadding>
+              <ListItemButton sx={{ minHeight: 48 }} onClick={handleLogout}>
+                <ListItemIcon sx={{ minWidth: 0, mr: isSidebarOpen ? 3 : 'auto', justifyContent: 'center', color: '#FFF' }}>
+                  {bottomLink.icon}
+                </ListItemIcon>
+                <ListItemText primary={bottomLink.label} sx={{ opacity: isSidebarOpen ? 1 : 0, color: '#FFF' }} />
+              </ListItemButton>
+              
+            </ListItem>
+          </Tooltip>
         </List>
       </Drawer>
     </>

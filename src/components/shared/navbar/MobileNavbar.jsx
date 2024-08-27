@@ -3,9 +3,26 @@ import React from 'react'
 import { leftNavLinks } from '@/constants'
 import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material'
 import Link from 'next/link'
+import { toast } from 'react-toastify'
+import { useRouter } from 'next/navigation'
 
 
 export default function MobileNavbar() {
+  const topLinks = leftNavLinks.slice(0, -1);
+  const bottomLink = leftNavLinks[leftNavLinks.length - 1];
+  const router = useRouter();
+
+  const handleLogout =  () => {
+    try {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      router.push("/login");
+    } catch (error) {
+      toast.error("Logout failed: ", error);
+    }
+  };
+
+
   return (
     <Paper
       sx={{
@@ -17,16 +34,24 @@ export default function MobileNavbar() {
       }}
       elevation={3} 
     >
-      <BottomNavigation>
-        {leftNavLinks.map(({ path, label, icon }, index)=>(
-          <Link key={index} href={path}>
-            <BottomNavigationAction 
-              key={index}
-              label={label}
-              icon={icon}
-            />
-          </Link>
-        ))} 
+      <BottomNavigation
+       showLabels
+      >
+        {topLinks.map(({ path, label, icon }, index)=>(
+          <BottomNavigationAction 
+            key={label}
+            component={Link}
+            href={path}
+            label={label}
+            icon={icon}
+          />
+        ))}
+          <BottomNavigationAction 
+            key={bottomLink.label}
+            label={bottomLink.label}
+            icon={bottomLink.icon}
+            onClick={handleLogout}
+          />
       </BottomNavigation>
     </Paper>  
   )
