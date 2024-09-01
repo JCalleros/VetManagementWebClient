@@ -10,9 +10,7 @@ import { toast } from 'react-toastify';
 import { useCreateAppointmentMutation } from '@/lib/redux/features/appointments/appointmentsApiSlice';
 import { appointmentSchema } from '@/lib/validationSchemas';
 import { useGetAllOwnersQuery } from '@/lib/redux/features/owners/ownersApiSlice';
-import debounce from 'lodash.debounce';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks/typedHooks';
-import { setSearchTerm } from "@/lib/redux/features/owners/ownerSlice";
 import PatientModalSelection from '@/components/modals/patients/PatientModalSelection';
 import moment from 'moment-timezone';
 import SearchCreateOwner from '@/components/shared/search/SearchCreateOwner';
@@ -28,13 +26,10 @@ const services = [
 export default function CreateAppointmentForm({ onClose, initialDate="" }) {
   const formatedDate = initialDate ? moment.utc(initialDate).format("YYYY-MM-DDTHH:mm") : '';
   
-  const dispatch = useAppDispatch();
-  const searchTerm = useAppSelector((state) => state.owner.searchTerm);
   const [createAppointment, { isLoading }] = useCreateAppointmentMutation();
   const [selectedPatients, setSelectedPatients] = useState([]);
   const [openPatientModal, setOpenPatientModal] = useState(false);
-  const { data: owners, isLoading: loadingOwners } = useGetAllOwnersQuery({ searchTerm, page: 1 });
-
+  
   const {
     handleSubmit,
     control,
@@ -70,6 +65,8 @@ export default function CreateAppointmentForm({ onClose, initialDate="" }) {
 
   const onSubmit = async (values) => {
     try {
+      const utcDate = moment(values.date).utc().toISOString();
+      values = { ...values, date: utcDate };
       const appointment = await createAppointment({ ...values, patients: selectedPatients.map(p => p.id) }).unwrap();
       toast.success("Appointment has been scheduled");
       onClose(appointment);

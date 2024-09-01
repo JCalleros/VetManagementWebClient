@@ -19,6 +19,15 @@ export const appointmentsApiSlice = baseApiSlice.injectEndpoints({
         if (params.searchTerm) {
           queryString.append("search", params.searchTerm);
         }
+        if (params.startDate) {
+          queryString.append("start_date", params.startDate);
+        }
+        if (params.endDate) {
+          queryString.append("end_date", params.endDate);
+        }
+        if (params.pageSize) {
+          queryString.append("page_size", params.pageSize);
+        }
         return `/appointments/?${queryString.toString()}`;
       },
       providesTags: ["Appointment"],
@@ -33,5 +42,6 @@ export const appointmentsApiSlice = baseApiSlice.injectEndpoints({
 export const {
   useCreateAppointmentMutation,
   useGetAllAppointmentsQuery,
+  useGetAppointmentsByDateRangeQuery,
   useGetSingleAppointmentQuery,
 } = appointmentsApiSlice;

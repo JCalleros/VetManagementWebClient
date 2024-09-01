@@ -1,34 +1,69 @@
 "use client";
 
-import { useState } from 'react';
-import { Box, Button, CircularProgress, useMediaQuery, useTheme, Typography } from '@mui/material';
+import { useMemo, useState } from 'react';
+import { Box, Button, CircularProgress, useMediaQuery, useTheme, Typography, Select, MenuItem } from '@mui/material';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment-timezone';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { useAppSelector } from '@/lib/redux/hooks/typedHooks';
+import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks/typedHooks';
 import { useGetAllAppointmentsQuery } from '@/lib/redux/features/appointments/appointmentsApiSlice';
 import AppointmentModalForm from '../modals/appointments/AppointmentModalForm';
 import ModalForm from '../modals/ModalForm';
 import CreateAppointmentForm from '../forms/appointment/CreateAppointmentForm';
 import { useRouter } from 'next/navigation';
+import { setSearchTerm } from '@/lib/redux/features/appointments/appointmentSlice';
 
+const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+moment.tz.setDefault(userTimeZone); 
 const localizer = momentLocalizer(moment);
-moment.tz.setDefault('utc')
-
 
 export default function AppointmentsPageContent({ params }) {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
   const [newEventStart, setNewEventStart] = useState(null);
-  const searchTerm = useAppSelector((state) => state.appointment.searchTerm);
-  const page = useAppSelector((state) => state.appointment.page);
-  const { data, isLoading, refetch } = useGetAllAppointmentsQuery({ searchTerm, page });
+  const [statusFilter, setStatusFilter] = useState('SCHEDULED');
   const [view, setView] = useState('month'); 
   const [date, setDate] = useState(new Date());
 
+  const { startDate, endDate } = useMemo(() => {
+    let start, end;
+
+    switch (view) {
+      case 'week':
+        start = moment(date).startOf('week').toDate();
+        end = moment(date).endOf('week').toDate();
+        break;
+      case 'day':
+        start = moment(date).startOf('day').toDate();
+        end = moment(date).endOf('day').toDate();
+        break;
+      case 'month':
+      default:
+        start = moment(date).startOf('month').toDate();
+        end = moment(date).endOf('month').toDate();
+        break;
+    }
+
+    return { 
+      startDate: start.toISOString().split('T')[0], 
+      endDate: end.toISOString().split('T')[0] 
+    };
+  }, [view, date]);
+
+
+
+  const { data, isLoading } = useGetAllAppointmentsQuery({
+    startDate: startDate,
+    endDate: endDate,
+    searchTerm: statusFilter,
+    pageSize: "100",
+  });
+  
+  
+  
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md')); // Display small view on medium devices too
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
   const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('xs'));
 
   const handleNavigate = (newDate) => {
@@ -48,10 +83,34 @@ export default function AppointmentsPageContent({ params }) {
   };
 
   const handleSelectSlot = (slotInfo) => {
-    const utcStart = moment(slotInfo.start).utc().toISOString();
-    setNewEventStart(utcStart);
+    const localStart = moment(slotInfo.start);
+    const utcStart = localStart.utc().toISOString();
+    const selectedDate = localStart.clone().utc();
+    setNewEventStart(selectedDate);
     setModalOpen(true);
   };
+
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'scheduled':
+        return '#1976d2';
+      case 'completed':
+        return '#388e3c';
+      case 'cancelled':
+        return '#d32f2f';
+      default:
+        return '#757575';
+    }
+  };
+
+
+  const handleFilter = (event) => {
+    setStatusFilter(event.target.value);
+    const term = event.target.value.toLowerCase();
+    dispatch(setSearchTerm(term));
+  }
+
 
   if (isLoading) {
     return (
@@ -76,6 +135,23 @@ export default function AppointmentsPageContent({ params }) {
       }}
     >
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+      <Select
+          value={statusFilter}
+          onChange={handleFilter}
+          displayEmpty
+          sx={{
+            minWidth: { xs: '120px', sm: '200px' },
+            fontSize: { xs: '0.75rem', sm: '1rem' },
+            backgroundColor: '#fff',
+            boxShadow: 1,
+            borderRadius: 1,
+          }}
+        >
+          <MenuItem value="">All Appointments</MenuItem>
+          <MenuItem value="SCHEDULED">Scheduled</MenuItem>
+          <MenuItem value="COMPLETED">Completed</MenuItem>
+          <MenuItem value="CANCELLED">Cancelled</MenuItem>
+        </Select>
         <Button
           variant="contained"
           color="primary"
@@ -127,14 +203,15 @@ export default function AppointmentsPageContent({ params }) {
           <Calendar
             localizer={localizer}
             events={appointments.map(appointment => {
-              const localStart = moment.utc(appointment.date).toDate();
-              const localEnd = moment.utc(appointment.date).add(15, 'minutes').toDate();
+              const localStart = moment.utc(appointment.date).tz(userTimeZone).toDate();
+              const localEnd = moment.utc(appointment.date).add(15, 'minutes').tz(userTimeZone).toDate();
               
               return {
                 id: appointment.id,
                 title: `${appointment.patients.map(patient => patient.name).join(', ')} - ${appointment.service_type}`,
                 start: localStart,
                 end: localEnd,
+                status: appointment.status,
                 allDay: false,
               };
             })}
@@ -149,8 +226,9 @@ export default function AppointmentsPageContent({ params }) {
             onSelectSlot={handleSelectSlot}
             selectable
             eventPropGetter={(event) => ({
+              
               style: {
-                backgroundColor: '#1976d2',
+                backgroundColor: getStatusColor(event.status),
                 color: '#fff',
                 borderRadius: '5px',
                 transition: 'transform 0.3s ease-in-out',
