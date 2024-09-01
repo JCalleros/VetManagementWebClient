@@ -6,7 +6,6 @@ import {
   Box,
   Typography,
   CardMedia,
-  Button,
   Card,
   CardContent,
   Chip,
@@ -18,7 +17,7 @@ import { Ban, Pencil } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useGetSingleAppointmentQuery } from '@/lib/redux/features/appointments/appointmentsApiSlice';
-import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
 import moment from 'moment-timezone';
 import { appointmentSchema } from '@/lib/validationSchemas';
@@ -26,9 +25,14 @@ import { ArrowBack } from '@mui/icons-material';
 
 const defaultPhoto = '/assets/images/defaultPatientCatPhoto.webp';
 
+const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+moment.tz.setDefault(userTimeZone); 
+
 function AppointmentGeneralInfo({ appointment }) {
+  
   const formattedDate = moment.utc(appointment.date).format('MMMM D, YYYY h:mm A');
 
+  const localStart = moment.utc(appointment.date).tz(userTimeZone).format('MMMM D, YYYY h:mm A');
   return (
     <Paper sx={{ padding: 2, mb: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -39,7 +43,7 @@ function AppointmentGeneralInfo({ appointment }) {
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <Typography variant="h6">Date:</Typography>
-          <Typography variant="body1">{formattedDate}</Typography>
+          <Typography variant="body1">{localStart}</Typography>
         </Grid>
         <Grid item xs={12} sm={6}>
           <Typography variant="h6">Notes:</Typography>
